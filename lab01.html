@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+  <!-- shims -->
+  <script src="midi-js/inc/shim/Base64.js" type="text/javascript"></script>
+  <script src="midi-js/inc/shim/Base64binary.js" type="text/javascript"></script>
+  <script src="midi-js/inc/shim/WebAudioAPI.js" type="text/javascript"></script>
+
+  <!-- midi.js -->
+  <script src="midi-js/js/midi/audioDetect.js" type="text/javascript"></script>
+  <script src="midi-js/js/midi/gm.js" type="text/javascript"></script>
+  <script src="midi-js/js/midi/loader.js" type="text/javascript"></script>
+  <script src="midi-js/js/midi/plugin.audiotag.js" type="text/javascript"></script>
+  <script src="midi-js/js/midi/plugin.webaudio.js" type="text/javascript"></script>
+  <script src="midi-js/js/midi/plugin.webmidi.js" type="text/javascript"></script>
+
+  <!-- utils -->
+  <script src="midi-js/js/util/dom_request_xhr.js" type="text/javascript"></script>
+  <script src="midi-js/js/util/dom_request_script.js" type="text/javascript"></script>
+  <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+
+  <title>COMP4431 Multimedia Computing - MIDI Keyboard</title>
+
+</head>
+
+<body>
+  <nav class="navbar navbar-dark bg-dark navbar-fixed-top">
+    <div class="navbar-header">
+      <span class="navbar-brand">MIDI Keyboard</span>
+    </div>
+  </nav>
+
+  <div class="container">
+
+    <!-- Here are the controls -->
+    <div class="row mb-5">
+      <div class="col-6">
+        <label for="amplitude">MIDI Amplitude:</label>
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text">0</span>
+          </div>
+          <div class="row flex-fill align-items-center mx-0 px-2 border">
+            <input class="custom-range" id="amplitude" type="range" value="100" min="0" max="127">
+          </div>
+          <div class="input-group-append">
+            <span class="input-group-text">127</span>
+          </div>
+        </div>
+      </div>
+      <div class="col-6">
+        <label for="pitch">Lowest MIDI Pitch:</label>
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text">21</span>
+          </div>
+          <div class="row flex-fill align-items-center mx-0 px-2 border">
+            <input class="custom-range" id="pitch" type="range" value="60" min="21" max="85">
+          </div>
+          <div class="input-group-append">
+            <span class="input-group-text">85</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="row mb-5">
+      <div class="col-6">
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text">1 Box = </span>
+          </div>
+          <div class="row flex-fill align-items-center mx-0 border">
+            <input type="number" class="form-control" aria-label="Default"
+            id="tempo" value="1">
+          </div>
+          <div class="input-group-append">
+            <span class="input-group-text">s</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-6">
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text">Length</span>
+          </div>
+          <div class="row flex-fill align-items-center mx-0 border">
+            <input type="number" class="form-control" aria-label="Default"
+            id="time" value="10">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row align-items-center mb-5">
+      <div class="col-6">
+        <div class="form-group-row">
+          <label for="play-mode">Play Mode:&nbsp; &nbsp;</label>
+          <div class="btn-group btn-group-toggle" data-toggle="buttons">
+            <label class="btn btn-primary">
+              <input type="radio" name="play-mode" value="single" autocomplete="off" checked> Single Note
+            </label>
+            <label class="btn btn-primary">
+              <input type="radio" name="play-mode" value="major" autocomplete="off"> Major Chord
+            </label>
+            <label class="btn btn-primary">
+              <input type="radio" name="play-mode" value="minor" autocomplete="off"> Minor Chord
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row align-items-center mb-5">
+      <div class="col-6">
+        <form class="form-inline">
+          <div class="form-group">
+            <label for="instrument">Instrument: &nbsp;</label>
+            <div class="input-group myinput">
+              <select class="custom-select form-contrl" id="instruments">
+                <option value="56" selected>Trumpet</option>
+                <option value="10">Music Box</option>
+                <option value="22">Harmonica</option>
+                <option value="24">Acoustic Guitar</option>
+                <option value="32">Acoustic Bass</option>
+                <option value="40">Violin</option>
+                <option value="41">Viola</option>
+                <option value="42">Cello</option>
+                <option value="0">Acoustic Grand Piano</option>
+                <option value="19">Church Organ</option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="col-6">
+        <form class="form-inline">
+          <div class="form-group">
+            <label for="Instrument">Track: &nbsp;</label>
+            <div class="input-group myinput">
+              <select class="custom-select" id="tracks">
+                <option value="" selected>Select your track</option>
+              </select>
+            </div>
+          </div>
+        </form>
+
+      </div>
+    </div>
+
+    <div class="row flex-fill align-items-center">
+      <div class="input-group mb-5">
+        <button type="button" class="btn btn-success" id="play">Play</button>
+        <button type="button" class="btn btn-warning" id="save">Save</button>
+        <button type="button" class="btn btn-warning" id="update">Update Track</button>
+        <button type="button" class="btn btn-dark" id="clear">Clear</button>
+      </div>
+    </div>
+
+    <div id="result"></div>
+  </div>
+
+
+
+
+
+  <div class="noteTable">
+    <table>
+
+    </table>
+  </div>
+
+  <div class="keyboard">
+
+    <!-- First we draw the white keys -->
+    <!-- <div class="keys"></div>
+          <button type="button" class="white-key" id="key-0">C</button>
+          <button type="button" class="black-key" id="key-1">C#</button>
+          <button type="button" class="white-key" id="key-2">D</button>
+          <button type="button" class="black-key" id="key-3">D#</button>
+          <button type="button" class="white-key" id="key-4">E</button>
+          <button type="button" class="white-key" id="key-5">F</button>
+          <button type="button" class="black-key" id="key-6">F#</button>
+          <button type="button" class="white-key" id="key-7">G</button>
+          <button type="button" class="black-key" id="key-8">G#</button>
+          <button type="button" class="white-key" id="key-9">A</button>
+          <button type="button" class="black-key" id="key-10">A#</button>
+          <button type="button" class="white-key" id="key-11">B</button>
+          <button type="button" class="white-key" id="key-12">C</button>
+          <button type="button" class="black-key" id="key-13">C#</button>
+          <button type="button" class="white-key" id="key-14">D</button>
+          <button type="button" class="black-key" id="key-15">D#</button>
+          <button type="button" class="white-key" id="key-16">E</button>
+          <button type="button" class="white-key" id="key-17">F</button>
+          <button type="button" class="black-key" id="key-18">F#</button>
+          <button type="button" class="white-key" id="key-19">G</button>
+          <button type="button" class="black-key" id="key-20">G#</button>
+          <button type="button" class="white-key" id="key-21">A</button>
+          <button type="button" class="black-key" id="key-22">A#</button>
+          <button type="button" class="white-key" id="key-23">B</button>
+        </div> -->
+
+    <!-- Now we draw the black keys, so they appear on top of the white keys
+        (in a web page, things included later are normally shown on top of things included earlier) -->
+
+  </div>
+
+  </div>
+  </div>
+  <div class="modal fade" id="loading" tabindex="-1" role="dialog" aria-labelledby="loading">
+    <div class="modal-dialog modal-sm" role="document">
+      <div class="modal-content">
+        <div class="modal-body text-center">
+          <div class="spinner-border" role="status">
+            <span class="sr-only">Loading...</span>
+          </div>
+          <p id="status" class="pt-4">Loading MIDI instruments...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+    integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+    integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+    crossorigin="anonymous"></script>
+
+  <!-- the lab JavaScript -->
+  <script src="lab01.js" type="text/javascript"></script>
+
+
+  <style>
+    body {
+      min-width: 590px;
+      background-color: #87BCDE;
+    }
+
+    .container {
+      min-width: 590px;
+      width: 2000px;
+      margin-top: 20px
+    }
+
+    .keyboard {
+      top: 30px;
+      float: right;
+      position: relative;
+      width: 962px;
+      /* height: 10%; */
+      border: 1px solid lightgray;
+      background: lightgray;
+      -moz-transform: scale(0.4) rotate(270deg);
+      -webkit-transform: scale(0.4) rotate(270deg);
+      -o-transform: scale(0.4) rotate(270deg);
+      -ms-transform: scale(0.4) rotate(270deg);
+      transform: scale(0.4) rotate(270deg);
+    }
+
+    keys {
+      position: absolute;
+    }
+
+    label {
+      font-weight: bold;
+      font-size: large;
+    }
+
+    .white-key,
+    .black-key {
+      float: left;
+      border-radius: 4px;
+      width: 40px;
+      height: 250px;
+      /* -moz-transform: scale(0.4) rotate(270deg);
+      -webkit-transform: scale(0.4) rotate(270deg);
+      -o-transform: scale(0.4) rotate(270deg);
+      -ms-transform: scale(0.4) rotate(270deg);
+      transform: scale(0.4) rotate(270deg); */
+    }
+
+    .white-key,
+    .black-key {
+      border: 1px solid gray;
+      background: white;
+      line-height: 460px;
+    }
+
+    .black-key {
+      border: 1px solid black;
+      background: black;
+      color: white;
+      line-height: 460px;
+    }
+
+    .spacer {
+      width: 20px;
+      float: left;
+    }
+
+    #play,
+    #update,
+    #save,
+    #clear {
+      width: 200x;
+      height: 40px;
+      margin-left: 5px;
+      margin-right: 5px;
+    }
+
+    .myinput {
+      width: 900px;
+    }
+
+    select.form-control{display:inline-block}
+
+    #play-mode
+    /* table.noteTable {
+    height: 962px;
+    overflow: auto;
+    white-space: nowrap;
+    text-align: left;
+    border-collapse: collapse;
+    }
+    table.noteTable td, table.noteTable th {
+      border: 1px solid #000000;
+      padding: 4px 3px;
+    }
+    table.noteTable tbody td {
+      width: 250px; height: 40px;
+    } */
+  </style>
+</body>
+
+</html>
