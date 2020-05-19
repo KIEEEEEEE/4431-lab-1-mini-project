@@ -407,8 +407,8 @@ function changeTrack() {
         for (var i = 0; i < trackCont[value].length; i++) {
             contTrue[i] = [];
             for (var j = 0; j < trackCont[value][i].length; j++) {
-                if (trackCont[i][j] != null)
-                    contTrue[i][j] = trackCont[i][j];
+                if (trackCont[value][i][j] != null)
+                    contTrue[i][j] = trackCont[value][i][j];
             }
         }
 
@@ -498,15 +498,6 @@ function noteSelected(e) {
 }
 
 
-function generateCanvas() {
-    canvas = document.createElement("canvas");
-    canvas.width = "1000px";
-    canvas.height = "400px";
-    document.getElementById("canvas").appendChild(canvas);
-    ctx = canvas.getContext('2d');
-
-}
-
 
 $(document).ready(function () {
     // Show a loading window
@@ -565,8 +556,6 @@ $(document).ready(function () {
 
 
             generateTable();
-
-            generateCanvas();
 
         }
     });
